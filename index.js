@@ -1,6 +1,7 @@
 const Application = require('./framework/Application');
 const userRouter = require('./src/userRouter');
 const jsonParser = require('./framework/parseJSON');
+const urlParser = require('./framework/parseUrl');
 const PORT = process.env.PORT || 5000;
 
 // const server = http.createServer((req, res) => {
@@ -35,6 +36,7 @@ const PORT = process.env.PORT || 5000;
 const application = new Application();
 
 application.use(jsonParser);
+application.use(urlParser('http://localhost:5000/'));
 
 application.addRouter(userRouter);
 

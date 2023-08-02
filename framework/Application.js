@@ -31,11 +31,21 @@ module.exports = class Application {
 
     _createServer() {
         return http.createServer((req, res) => {
-            const emitted = this.emitter.emit(this._gerRouteMask(req.url, req.method), req, res);
-            // когда эмиттим событие, то будет возвращено значение false, если такого события нету
-            if (!emitted) {
-                res.end();
-            }
+            let body = '';
+            req.on('data', (chunk) => {
+                body = body + chunk;
+                console.log(chunk);
+            })
+            req.on('end', () => {
+                if (body) {
+                    req.body = JSON.parse(body);
+                }
+                const emitted = this.emitter.emit(this._gerRouteMask(req.url, req.method), req, res);
+                // когда эмиттим событие, то будет возвращено значение false, если такого события нету
+                if (!emitted) {
+                    res.end();
+                }
+            })
         });
     }
 
